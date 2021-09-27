@@ -18,6 +18,6 @@ void main() {
   });
 
   test('traknPayPlugin', () async {
-    expect(await Traknplugin.platformVersion, '42');
+    expect(await Traknplugin.initPay(""), '42');
   });
 }
