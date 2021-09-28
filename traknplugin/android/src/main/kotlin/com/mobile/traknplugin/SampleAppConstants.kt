@@ -1,4 +1,4 @@
-package com.mobile.traknplugin_example
+package com.mobile.traknplugin
 
 
 object SampleAppConstants {

@@ -7,8 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:json_to_form/json_schema.dart';
 import 'package:traknplugin/traknplugin.dart';
 
-import 'FieldData.dart';
-
 void main() {
   runApp(MyApp());
 }

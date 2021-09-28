@@ -13,6 +13,13 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import org.json.JSONException
+import org.json.JSONObject
+import com.mobile.pgv1.PGConstants
+import com.mobile.pgv1.PaymentGatewayInitializer
+import com.mobile.pgv1.PaymentParams
+import com.mobile.pgv1.ResponseCallbackListener
+
 
 /** TraknpluginPlugin */
 class TraknpluginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -54,6 +61,28 @@ class TraknpluginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activity = binding.activity as FlutterActivity
         channel.setMethodCallHandler { call, result ->
+            if (call.method.equals("traknPayPlugin")) {
+                val pgPaymentParams = PaymentParams(call.arguments())
+
+                val pgPaymentInitialzer = PaymentGatewayInitializer(SampleAppConstants.PG_PAYMENT_URL, pgPaymentParams, activity)
+                pgPaymentInitialzer.initiatePaymentProcess { paymentResponse ->
+                    try {
+                        println("paymentResponse: $paymentResponse")
+                        if (paymentResponse == "null") {
+                            result.success("Transaction Status: Transaction Error!")
+                        } else {
+                            val response = JSONObject(paymentResponse)
+                            result.success(response.getString("transaction_id"))
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        result.success("Transaction Status: Transaction Error!")
+
+                    }
+                }
+            } else {
+                result.notImplemented()
+            }
         }
     }
 
